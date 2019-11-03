@@ -103,15 +103,13 @@ class Buffer {
         while(processes[n]==maxSize-1) {
             processes[n]=0;
         }
-        while(n-1>=0) {
-            while (processes[n]- processes[n-1]==0) {
+            while (n>0 && processes[n]==processes[n-1]) {
                 try {
                     wait();
                 } catch (InterruptedException e) {
                     System.out.println(e);
                 }
             }
-        }
         while(n==0 && producer==processes[n]){
             try{
                 wait();
@@ -122,14 +120,14 @@ class Buffer {
 
         int index=processes[n];
         buffer[index]++;
+        processes[n]++;
 
         System.out.println("Process "+ n + " inclement on index "+ index +", buffer value: " + buffer[index]);
-        processes[n]++;
         notifyAll();
     }
 
     public synchronized void get(){
-        while(consumer-processes[numberProcess-1]==0){
+        while(consumer==processes[numberProcess-1]){
             try{
                 wait();
             }catch (InterruptedException e){
